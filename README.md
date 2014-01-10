@@ -2,20 +2,19 @@
 
 Add voting to your Mongoid documents
 
-**Note: this gem is no longer in use, you should consider it unmaintained.
-However pull requests and updates are welcomed.**
-
 ## Installation
 
-Install the gem
+This is a fork, so it doesn't exist as a gem right now. The only way to use it
+is through a Gemfile directive.
 
-    $ gem install mongoid-voteable
+Add the gem to your `Gemfile`
 
-or add the gem to your `Gemfile`
-
-    gem 'mongoid-voteable', '~> 0.1.0'
+    gem 'mongoid-voteable', git: 'https://github.com/AF83/mongoid-voteable.git'
 
 ## Usage
+
+This a a fork from the gem "mongoid-voteable", what follows are interesting bits
+of the initial README on the gem usage.
 
 Include the `Mongoid::Voteable` module into your models you want to vote in.
 
@@ -69,9 +68,20 @@ Some other ideas include specifying vote weights, for example an up vote may be
 worth more than a down vote, or vice versa. Also maybe voting in an embedded
 documented may affect the votes of the parent document.
 
+## Addition
+
+The notion of `vote_up` and `vote_down` is being added to this library. Instead
+of having a `votes` field, model has a `votes_up` and a `votes_down` attribute.
+Method `votes` returns the addition of the latters.
+
+There is also a `vote_up` and a `vote_down` method, both with the same syntax,
+same as the `vote` method, except the amount of votes can be omitted, and so
+forth defaulted to `1` or `-1`.
+
 ## License
 
 Copyright 2012 Tom Bell
+Copyright 2014 AF83
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

@@ -1,19 +1,42 @@
 require 'mongoid'
 
 module Mongoid
+
   module Voteable
 
     extend ActiveSupport::Concern
 
     included do
-      field :votes, :type => Integer, :default => 0
+      field :votes_up, :type => Integer, :default => 0
+      field :votes_down, :type => Integer, :default => 0
       field :voters, :type => Array, :default => []
     end
 
-    def vote(amount, voter)
+    def votes
+      votes_up + votes_down
+    end
+
+    %w|up down|.each do |direction|
+      define_method "vote_#{direction}" do |*args|
+        voter = args.pop
+        amount = if args.any?
+          args.pop
+        elsif direction == "up"
+          1
+        else
+          -1
+        end
+
+        vote amount, voter, "votes_#{direction}".to_sym
+      end
+    end
+
+    def vote(amount, voter, counter=nil)
       id = voter_id(voter)
+      counter ||= amount > 0 ? :votes_up : :votes_down
+
       unless voted?(id)
-        self.inc :votes, amount.to_i
+        self.inc counter, amount.to_i
         self.push :voters, id
       end
     end
@@ -36,6 +59,7 @@ module Mongoid
         voter
       end
     end
+
   end
 
 end

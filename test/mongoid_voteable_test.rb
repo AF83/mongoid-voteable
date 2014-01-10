@@ -13,12 +13,14 @@ class TestMongoidVoteable < MiniTest::Unit::TestCase
     DatabaseCleaner.clean
   end
 
-  def test_add_votes_field_to_document
-    refute_nil User.fields['votes']
-  end
-
-  def test_add_voters_field_to_document
+  def test_add_fields_to_document
+    refute_nil User.fields['votes_up']
+    refute_nil User.fields['votes_down']
     refute_nil User.fields['voters']
+
+    refute_nil Story.fields['votes_up']
+    refute_nil Story.fields['votes_down']
+    refute_nil Story.fields['voters']
   end
 
   def test_defines_vote_method
@@ -50,6 +52,22 @@ class TestMongoidVoteable < MiniTest::Unit::TestCase
   def test_can_vote_by_user
     @story.vote 1, @simon
     assert_equal 1, @story.votes
+  end
+
+  def test_can_vote_up_by_user
+    @story.vote_up @simon
+    assert_equal 1, @story.votes
+
+    @story.vote_up 2, @emily
+    assert_equal 3, @story.votes
+  end
+
+  def test_can_vote_down_by_user
+    @story.vote_down @simon
+    assert_equal -1, @story.votes
+
+    @story.vote_down -2, @emily
+    assert_equal -3, @story.votes
   end
 
   def test_limits_one_vote_per_voter
