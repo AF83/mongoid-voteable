@@ -36,8 +36,9 @@ module Mongoid
       counter ||= amount > 0 ? :votes_up : :votes_down
 
       unless voted?(id)
-        self.inc counter, amount.to_i
+        self.send "#{counter}=", (self.send(counter) + amount.to_i)
         self.push :voters, id
+        self.save
       end
     end
 
